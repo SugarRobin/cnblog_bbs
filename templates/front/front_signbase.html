@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title  %}{% endblock %}</title>
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='common/js/bbsajax.js') }}"></script>
+    <script src="{{ url_for('static', filename='common/js/md5.js') }}"></script>
+    <script src="{{ url_for('static', filename='common/js/bbsparams.js') }}"></script>
+{#    <script src="{{ url_for('static', filename='front/js/front_signup.js') }}"></script>#}
+    <script src="{{ url_for('static',filename='common/layer-v3.1.1/layer/layer.js') }}"></script>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div class="out-box">
+        <h2 class="page-title">{% block h2_block %}{% endblock %}</h2>
+        <div class="form-box">
+            {% block form_content %}{% endblock %}
+            <span style="display: none;" id="return-to-span">{{ return_to }}</span>
+        </div>
+    </div>
+</body>
+</html>

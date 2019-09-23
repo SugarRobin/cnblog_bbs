@@ -10,6 +10,7 @@ FrontUser = front_models.FrontUser
 CMSUser = cms_models.CMSUser  #导入cmsuse类
 CMSRole = cms_models.CMSRole  #导入角色类
 CMSPermission = cms_models.CMSPersmission #导入权限类
+from apps.models import BannerModel
 
 
 manager = Manager(app)

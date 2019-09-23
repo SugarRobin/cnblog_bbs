@@ -1,0 +1,10 @@
+.index-banner{
+    border-radius: 10px;
+    overflow: hidden;
+    height: 200px;
+}
+
+/*需要把图片的高度和轮播的一致*/
+.index-banner img{
+    height: 200px;
+}

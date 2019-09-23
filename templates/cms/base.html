@@ -59,6 +59,8 @@
 
                    {% endif %}
 
+              <li class="nav-group banner-manage"><a href="{{ url_for('cms.banners') }}">轮播图管理</a></li>
+
               {% if g.cms_user.has_permission(CMSPersmission.POSTER) %}
                 <li class="nav-group post-manage"><a href="{{ url_for('cms.posts') }}">帖子管理</a></li>
               {% endif %}

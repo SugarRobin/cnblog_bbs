@@ -42,7 +42,20 @@ class RestEmailForm(BaseForm):
         if not captcha_cache or captcha.lower() != captcha_cache.lower():
             raise ValidationError('邮箱验证码错误')
 
-        
+
+#轮播图表单
+class AddBannerForm(BaseForm):
+    name = StringField(validators=[InputRequired(message='请输入轮播图名称！')])
+    image_url = StringField(validators=[InputRequired(message='请输入轮播图图片链接')])
+    link_url = StringField(validators=[InputRequired(message='请输入轮播图跳转链接')])
+    priority = IntegerField(validators=[InputRequired(message='请输入轮播图优先级')])
+
+
+#修改轮播图的表单
+class UpdateBannerForm(AddBannerForm):
+    banner_id = IntegerField(validators=[InputRequired(message='请输入轮播图的id')])
+
+
 
 
 

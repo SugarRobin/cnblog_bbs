@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask import views,render_template,request,session,redirect,url_for
-from .forms import LoginForm,ResetPwdForm,RestEmailForm
+from .forms import LoginForm,ResetPwdForm,RestEmailForm,UpdateBannerForm
 from .models import CMSUser,CMSPersmission
 from .decorators import login_required,permission_required
 import config
@@ -9,11 +9,16 @@ from flask import jsonify
 from exts import db
 from utils import xjson
 
+
 from exts import mail
 from flask_mail import Message
 from utils import xcache
 import string,random
 # from . import hook
+
+#轮播图
+from .forms import AddBannerForm
+from apps.models import BannerModel
 
 
 
@@ -220,3 +225,75 @@ def cusers():
 @permission_required(CMSPersmission.ADMIN)
 def croles():
     return render_template('cms/cms_roles.html')
+
+
+#轮播图管理视图
+@bp.route('/abanner/',methods=['POST'])
+@login_required
+def abanner():
+    form = AddBannerForm(request.form)
+    if form.validate():
+        name = form.name.data
+        image_url = form.image_url.data
+        link_url = form.link_url.data
+        priority = form.priority.data
+        banner = BannerModel(name=name,image_url=image_url,link_url=link_url,priority=priority)
+        db.session.add(banner)
+        db.session.commit()
+        return xjson.json_sucess()
+    else:
+        return xjson.json_param_error(message=form.get_error())
+
+
+#展示轮播图
+@bp.route('/banners/')
+@login_required
+def banners():
+
+    banners = BannerModel.query.order_by(BannerModel.priority.desc()).all()
+
+
+    return render_template('cms/cms_banners.html',banners=banners)
+
+
+@bp.route('/ubanner/',methods=['POST'])
+@login_required
+def ubanner():
+    form = UpdateBannerForm(request.form)
+    if form.validate():
+        banner_id = form.banner_id.data
+        name = form.name.data
+        image_url = form.image_url.data
+        link_url = form.link_url.data
+        priority = form.priority.data
+        banner = BannerModel.query.get(banner_id)
+
+        if banner:
+            banner.name = name
+            banner.image_url = image_url
+            banner.priority = priority
+            db.session.commit()
+            return xjson.json_sucess()
+        else:
+            return xjson.json_params_error(message='没有这个轮播图')
+    else:
+        return xjson.json_params_error(message=form.get_error())
+
+
+@bp.route('/dbanner/',methods=['POST'])
+@login_required
+def dbanner():
+    banner_id = request.form.get('banner_id')
+    if not banner_id:
+        return xjson.json_params_error(message='请传入轮播图id')
+
+    banner = BannerModel.query.get(banner_id)
+    if not banner:
+        return xjson.json_params_error(message='没有这个轮播图！')
+
+    db.session.delete(banner)
+    db.session.commit()
+    return xjson.json_sucess()
+
+
+

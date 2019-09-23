@@ -1,0 +1,37 @@
+body{
+    background-color: #8CD4F5;
+}
+
+.page-title {
+            text-align: center;
+            padding-top: 50px;
+}
+.out-box{
+    width: 845px;
+    background-color: white;
+    margin: 0 auto;
+    margin-top: 50px;
+
+}
+
+.page-title {
+    text-align: center;
+    padding-top: 80px;
+}
+
+.form-box{
+    padding-top: 50px;
+    padding-bottom: 50px;
+    width: 300px;
+    margin: 0 auto;
+}
+
+.captcha-addon{
+    padding: 0;  //这是内边距为0，因为input-group-addon有设置内边距
+    overflow: hidden;   //当里面的元素超出则隐藏
+}
+
+#captcha-img{
+    height: 32px;   //设置图片的高度为32px
+    cursor: pointer;   //当鼠标移到图片上变成手的图标
+}

@@ -44,7 +44,7 @@ class FrontUser(db.Model):
     def password(self,newpwd):
         self._password = generate_password_hash(newpwd)
 
-    def chck_password(self,rawpwd):
+    def check_password(self,rawpwd):
         return check_password_hash(self._password,rawpwd)
 
 
