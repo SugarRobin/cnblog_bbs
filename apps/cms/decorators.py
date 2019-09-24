@@ -26,3 +26,4 @@ def permission_required(permission):
                 return redirect(url_for('cms.index'))
         return inner
     return outter
+

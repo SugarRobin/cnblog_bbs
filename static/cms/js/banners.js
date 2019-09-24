@@ -48,10 +48,10 @@
 
 //编辑
 $(function () {
-    $("#save-banner-btn").click(function (event) {
+    $("#save-banner-btn1").click(function (event) {
         event.preventDefault();
         self = $(this);
-        var dialog = $("#banner-dialog");
+        var dialog = $("#banner-dialog1");
         var nameInput = dialog.find("input[name='name']");
         var imageInput = dialog.find("input[name='image_url']");
         var linkInput = dialog.find("input[name='link_url']");
@@ -63,6 +63,8 @@ $(function () {
         var priority = priorityInput.val();
         //通过保存按钮上的属性data-type，获取数据类型，如果它的值是update,就是编辑操作了，否则就是添加操作
         var submitType = self.attr('data-type');
+        console.log(submitType)
+        console.log('djafjndsvnann;12334456777')
         //这里通过保存按钮上的属性data-id获取到轮播图的id, 如果是添加轮播图这就是个空值，不用管它
         var bannerId = self.attr("data-id");
 
@@ -110,6 +112,23 @@ $(function () {
 });
 
 
+
+
+
+$(function () {
+    bbsqiniu.setUp({
+        // 'domain':'http://pxwttml1j.bkt.clouddn.com',  //七牛的域名
+        'domain':'http://pyb9vndqb.bkt.clouddn.com/',
+        'browse_btn':'upload-btn',    //按钮的id
+        'uptoken_url':'http://127.0.0.1:5000/cms/uptoken/',     //后端的url获取token
+        'success':function (up,file,info) {
+            var imageInput = $("input[name='image_url']");
+            imageInput.val(file.name);      //把图片的完整地址填入到表单中
+
+        }
+    })
+
+})
 
 
 console.log('12337478893589')

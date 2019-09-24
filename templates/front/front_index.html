@@ -19,26 +19,38 @@
 
               <!-- 轮播图 -->
               <div class="carousel-inner" role="listbox">
-                <div class="item active">
-                    <a href="#">
-                        <img src="https://i1.mifile.cn/a4/xmad_15338857534213_DaEjU.jpg" alt="...">
-                    </a>
-                </div>
-                <div class="item">
-                  <a href="#">
-                        <img src="https://i1.mifile.cn/a4/xmad_1535103285321_fPlOK.jpg" alt="...">
-                    </a>
-                </div>
-                <div class="item">
-                  <a href="#">
-                        <img src="https://i1.mifile.cn/a4/xmad_15349329950127_PVrya.jpg" alt="...">
-                    </a>
-                </div>
-                <div class="item">
-                  <a href="#">
-                        <img src="https://i1.mifile.cn/a4/xmad_15338982677936_eQTJk.jpg" alt="...">
-                    </a>
-                </div>
+{#                <div class="item active">#}
+{#                    <a href="#">#}
+{#                        <img src="https://i1.mifile.cn/a4/xmad_15338857534213_DaEjU.jpg" alt="...">#}
+{#                    </a>#}
+{#                </div>#}
+{#                <div class="item">#}
+{#                  <a href="#">#}
+{#                        <img src="https://i1.mifile.cn/a4/xmad_1535103285321_fPlOK.jpg" alt="...">#}
+{#                    </a>#}
+{#                </div>#}
+{#                <div class="item">#}
+{#                  <a href="#">#}
+{#                        <img src="https://i1.mifile.cn/a4/xmad_15349329950127_PVrya.jpg" alt="...">#}
+{#                    </a>#}
+{#                </div>#}
+{#                <div class="item">#}
+{#                  <a href="#">#}
+{#                        <img src="https://i1.mifile.cn/a4/xmad_15338982677936_eQTJk.jpg" alt="...">#}
+{#                    </a>#}
+{#                </div>#}
+
+                  {% for banner in banners %}
+                  {% if loop.first %}
+                      <div class="item active">
+                  {% else %}
+                      <div class="item">
+                  {% endif %}
+                      <a href="{{ banner.link_url }}">
+                            <img src="{{ banner.image_url }}" alt="...">
+                      </a>
+                  </div>
+                  {% endfor %}
               </div>
 
               <!-- 左右切换的控制按钮 -->
@@ -52,6 +64,25 @@
               </a>
         </div>
     </div>
-    <div class="sm-container"></div>
+
+
+
+
+    <div class="sm-container">
+
+        <div style="padding-bottom: 10px">
+{#            <button class="btn btn-warning btn-block">发布帖子</button>#}
+            <a href="{{ url_for("front.apost") }}" class="btn btn-warning btn-block">发布帖子</a>
+        </div>
+
+        <div class="list-group">
+          <a href="#" class="list-group-item active">所有板块</a>
+          {% for board in boards %}
+              <a href="#" class="list-group-item ">{{ board.name }}</a>
+          {% endfor %}
+    </div>
+
+
+    </div>
 
 {% endblock %}

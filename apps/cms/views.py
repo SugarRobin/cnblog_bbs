@@ -21,6 +21,11 @@ from .forms import AddBannerForm
 from apps.models import BannerModel
 
 
+#板块
+from apps.models import BoardModel
+from .forms import AddBoardForm,UpdateBoardForm
+
+
 
 bp = Blueprint('cms',__name__,url_prefix='/cms')
 
@@ -197,12 +202,12 @@ def posts():
 def comments():
     return render_template('cms/cms_comments.html')
 
-#板块管理
-@bp.route('/boards/')
-@login_required
-@permission_required(CMSPersmission.BOARDER)
-def boards():
-    return render_template('cms/cms_boards.html')
+# #板块管理
+# @bp.route('/boards/')
+# @login_required
+# @permission_required(CMSPersmission.BOARDER)
+# def boards():
+#     return render_template('cms/cms_boards.html')
 
 #前台用户管理
 @bp.route('/fusers/')
@@ -296,4 +301,77 @@ def dbanner():
     return xjson.json_sucess()
 
 
+import qiniu
+@bp.route('/uptoken/')
+def uptoken():
+    access_key = 'CccgflgUNx-CVXk8rsouzC2QGicYWCef3_jFPyJj'
+    secret_key = 'Par6K8cPirEWGzsDP6dblBRyMkaRaL3TvtXWakXA'
+    q = qiniu.Auth(access_key,secret_key)
 
+    bucket = 'flaskbbs03'
+    token = q.upload_token(bucket)
+    return jsonify({'uptoken':token})
+
+
+#添加板块路由
+@bp.route('/aboard/',methods=['POST'])
+@login_required
+@permission_required(CMSPersmission.BOARDER)
+def aboard():
+    add_form_board = AddBoardForm(request.form)
+    if add_form_board.validate():
+        print()
+        name = add_form_board.name.data
+        board = BoardModel(name=name)
+        db.session.add(board)
+        db.session.commit()
+        return xjson.json_sucess(message='添加板块成功')
+    else:
+        return xjson.json_params_error(message=add_form_board.get_error())
+
+
+#编辑板块的路由
+@bp.route('/uboard/',methods=['POST'])
+@login_required
+@permission_required(CMSPersmission.BOARDER)
+def uboard():
+    update_board_form = UpdateBoardForm(request.form)
+    if update_board_form.validate():
+        board_id = update_board_form.board_id.data
+        name = update_board_form.name.data
+        print(name)
+        if board_id:
+            board = BoardModel.query.get(board_id)
+            board.name = name
+            db.session.commit()
+            return xjson.json_sucess(message='更新成功')
+        else:
+            return xjson.json_param_error(message='板块不存在')
+    else:
+        return xjson.json_param_error(message=update_board_form.get_error())
+
+
+@bp.route('/dboard/', methods=['POST'])
+@login_required
+@permission_required(CMSPersmission.BOARDER)
+def dboard():
+    board_id = request.form.get('board_id')
+    if not board_id:
+        return xjson.json_param_error(message='请传入板块id')
+    board = BoardModel.query.get(board_id)
+    if not board:
+        return xjson.json_param_error(message='没有这个板块')
+    db.session.delete(board)
+    db.session.commit()
+    return xjson.json_sucess(message='删除板块成功')
+
+#显示板块的路由
+@bp.route('/boards/')
+@login_required
+@permission_required(CMSPersmission.BOARDER)
+def boards():
+    all_boards = BoardModel.query.all()
+    context = {
+        'boards':all_boards
+    }
+    return render_template('cms/cms_boards.html',**context)

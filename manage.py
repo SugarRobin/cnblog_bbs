@@ -10,7 +10,8 @@ FrontUser = front_models.FrontUser
 CMSUser = cms_models.CMSUser  #导入cmsuse类
 CMSRole = cms_models.CMSRole  #导入角色类
 CMSPermission = cms_models.CMSPersmission #导入权限类
-from apps.models import BannerModel
+from apps.models import BannerModel,BoardModel,PostModel
+import os
 
 
 manager = Manager(app)
@@ -18,6 +19,8 @@ manager = Manager(app)
 Migrate(app,db)
 
 manager.add_command('db',MigrateCommand)
+
+print(os.getcwd())
 
 @manager.command
 def create_role():

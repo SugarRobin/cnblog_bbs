@@ -3,6 +3,7 @@ import config
 from apps.cms import bp as cms_bp
 from apps.common import bp as common_bp
 from apps.front import bp as front_bp
+# from apps.uedit import bp as ueditor_bp
 from exts import db
 from flask_wtf import CSRFProtect  #开启csrf保护，需要在表单中增加隐藏csrf
 from exts import mail
@@ -23,6 +24,8 @@ mail.init_app(app)
 app.register_blueprint(cms_bp)
 app.register_blueprint(common_bp)
 app.register_blueprint(front_bp)
+# app.register_blueprint(ueditor_bp)
+
 
 
 

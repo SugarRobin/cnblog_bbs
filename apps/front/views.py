@@ -1,17 +1,29 @@
-from flask import Blueprint,views,render_template,request,session
+from flask import Blueprint,views,render_template,request,session,g
 from .forms import SignUpForm
 from .models import FrontUser
+from apps.models import BannerModel,BoardModel,PostModel
 from exts import db
 from utils import xjson
 from utils import safeutils
 import config
-from .forms import SignInForm
+from .forms import SignInForm,AddPostForm
+# from .hooks import my_before_request
+# import apps.front
+from .decorators import login_required
+
 
 bp = Blueprint('front',__name__)  #因为是前台直接访问不用加url_prefix
 
 @bp.route('/')
 def index():
-    return render_template('front/front_index.html')
+    banners = BannerModel.query.order_by(BannerModel.priority.desc()).all()
+    boards = BoardModel.query.all()
+    context = {
+        'banners':banners,
+        'boards':boards
+    }
+
+    return render_template('front/front_index.html',**context)
 
 
 class SignUpViews(views.MethodView):
@@ -64,4 +76,36 @@ class SignInViews(views.MethodView):
             return xjson.json_params_error(signin_form.get_error())
 
 bp.add_url_rule('/signin/',view_func=SignInViews.as_view('signin'))
+
+
+
+#用户发帖视图
+@bp.route('/apost/',methods=['GET','POST'])
+@login_required
+def apost():
+    if request.method == 'GET':
+        boards = BoardModel.query.all()
+        return render_template('front/front_apost.html',boards=boards)
+    else:
+        add_post_form = AddPostForm(request.form)
+        if add_post_form.validate():
+            title = add_post_form.title.data
+            content = add_post_form.content.data
+            board_id = add_post_form.board_id.data
+            board = BoardModel.query.get(board_id)
+            if not board:
+                return xjson.json_params_error(message='没有这个模版')
+            post = PostModel(title=title,content=content)
+            post.board = board
+            post.author = g.front_user
+            db.session.add(post)
+            db.commit()
+            return xjson.json_sucess()
+        else:
+            return xjson.json_params_error(message=add_post_form.get_error())
+
+
+
+
+
 

@@ -4,10 +4,87 @@
     板块管理-CMS管理系统
 {% endblock %}
 
+{% block head %}
+    <style>
+        .top-box button{
+            float: right;
+        }
+
+        .top-box{
+            overflow: hidden;
+            background: #ecedf0;
+            padding: 10px;
+        }
+    </style>
+    <script src="{{ url_for('static',filename='common/layer-v3.1.1/layer/layer.js') }}"></script>
+     <script src="{{ url_for('static', filename='cms/js/boards.js')}}"></script>
+{% endblock %}
+
 {% block page_title %}
     板块管理
 {% endblock %}
 
 {% block main_content %}
+    <div class="top-box">
+        <button class="btn btn-warning" data-toggle="modal" data-target="#banner-dialog2" id="add-board-btn">添加新板块</button>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>板块名称</th>
+                <th>帖子数量</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for board in boards %}
+            <tr data-id="{{ board.id }}" data-name="{{ board.name }}">
+                <td>{{ board.name }}</td>
+                <td>暂未实现</td>
+                <td>{{ board.create_time }}</td>
+                <td>
+                    <button class="btn btn-default btn-xs edit-board-btn">编辑</button>
+                    <button class="btn btn-danger btn-xs delete-board-btn">删除</button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+
+{#    <div class="modal fade" id="banner-dialog2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >#}
+{#    <div class="modal-dialog" role="document">#}
+{#        <div class="modal-content">#}
+{#            <div class="modal-header">#}
+{#                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>#}
+{#                <h4 class="modal-title" id="myModalLabel">添加板块</h4>#}
+{#            </div>#}
+{#            <div class="modal-body">#}
+{##}
+{##}
+{#                 <form action="" class="form-horizontal">#}
+{#            <div class="form-group" style="text-align: center">#}
+{#                <p>板块名称</p>#}
+{#              <label class="col-sm-1 control-label"></label>#}
+{#              <div class="col-sm-10">#}
+{#                  <input type="text" class="form-control" name="input_boards_val" placeholder="板块名称">#}
+{#              </div>#}
+{#          </div>#}
+{#              </form>#}
+{##}
+{##}
+{#            </div>#}
+{#            <div class="modal-footer">#}
+{#                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>#}
+{#                <button type="button" class="btn btn-primary" id="input_boards_val1">保存</button>#}
+{#            </div>#}
+{#        </div><!-- /.modal-content -->#}
+{#    </div><!-- /.modal -->#}
+{#</div>#}
+
+
     这是板块管理页面
 {% endblock %}

@@ -1,6 +1,6 @@
 from apps.forms import BaseForm
-from wtforms import StringField
-from wtforms.validators import Regexp,Length,EqualTo,ValidationError
+from wtforms import StringField,IntegerField
+from wtforms.validators import Regexp,Length,EqualTo,ValidationError,InputRequired
 from utils import xcache
 from .models import FrontUser
 
@@ -41,4 +41,10 @@ class SignInForm(BaseForm):
     password = StringField(validators=[Length(5,30,message='密码格式错误')])
     remember = StringField()
 
+
+#前台用户发帖表单
+class AddPostForm(BaseForm):
+    title = StringField(validators=[InputRequired(message='请输入标题！')])
+    content = StringField(validators=[InputRequired(message='请输入内容')])
+    board_id = IntegerField(validators=[InputRequired(message='请输入板块id')])
 

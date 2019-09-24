@@ -66,8 +66,15 @@ def sms_captcha():
 
 @bp.route('/uptoken/')
 def uptoken():
-    access_key = ''
-    secret_key = ''
+    access_key = 'CccgflgUNx-CVXk8rsouzC2QGicYWCef3_jFPyJj'
+    secret_key = 'Par6K8cPirEWGzsDP6dblBRyMkaRaL3TvtXWakXA'
+    q = qiniu.Auth(access_key,secret_key)
+
+    bucket = 'flaskbbs02'
+    token = q.upload_token(bucket)
+    return jsonify({'uptoken':token})
+
+
 
 
 
