@@ -18,6 +18,7 @@ bp = Blueprint('front',__name__)  #因为是前台直接访问不用加url_prefi
 def index():
     banners = BannerModel.query.order_by(BannerModel.priority.desc()).all()
     boards = BoardModel.query.all()
+
     context = {
         'banners':banners,
         'boards':boards
@@ -99,7 +100,7 @@ def apost():
             post.board = board
             post.author = g.front_user
             db.session.add(post)
-            db.commit()
+            db.session.commit()
             return xjson.json_sucess()
         else:
             return xjson.json_params_error(message=add_post_form.get_error())

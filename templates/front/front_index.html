@@ -6,18 +6,18 @@
     <link href="{{ url_for('static', filename='front/css/front_index.css') }}" rel="stylesheet">
 {% endblock %}
 
-{% block body %}这是首页内容
+{% block body %}
     <div class="lg-container">
         <div id="carousel-example-generic" class="carousel slide index-banner" data-ride="carousel">
               <!-- 指示器 -->
               <ol class="carousel-indicators">
-                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="0" ></li>
                 <li data-target="#carousel-example-generic" data-slide-to="1"></li>
                 <li data-target="#carousel-example-generic" data-slide-to="2"></li>
                 <li data-target="#carousel-example-generic" data-slide-to="3"></li>
               </ol>
 
-              <!-- 轮播图 -->
+              <!-- 轮播图 class="active"-->
               <div class="carousel-inner" role="listbox">
 {#                <div class="item active">#}
 {#                    <a href="#">#}
@@ -80,9 +80,44 @@
           {% for board in boards %}
               <a href="#" class="list-group-item ">{{ board.name }}</a>
           {% endfor %}
-    </div>
+        </div>
 
 
     </div>
+
+
+
+    <div class="post-group">
+    <ul class="post-group-head">
+            <li class="active"><a href="{{ url_for("front.index",st=1,bd=current_board) }}">最新</a></li>
+            <li><a href="{{ url_for("front.index",st=2,bd=current_board) }}">精华帖子</a></li>
+            <li><a href="{{ url_for("front.index",st=3,bd=current_board) }}">点赞最多</a></li>
+            <li><a href="{{ url_for("front.index",st=4,bd=current_board) }}">评论最多</a></li>
+    </ul>
+    <ul class="post-list-group">
+        {% for post in posts %}
+            <li>
+                <div class="author-avatar-group">
+                    <img src="{{ post.author.avatar or url_for('static',filename='common/images/logo.png') }}" alt="">
+                </div>
+                <div class="post-info-group">
+                    <p class="post-title">
+                        <a href="#">{{ post.title }}</a>
+                        {% if post.highlight %}
+                            <span class="label label-danger">精华帖</span>
+                        {% endif %}
+                    </p>
+                    <p class="post-info">
+                        <span>作者:{{ post.author.username }}</span>
+                        <span>发表时间:{{ post.create_time }}</span>
+                        <span>评论:0</span>
+                        <span>阅读:0</span>
+                    </p>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
 
 {% endblock %}
+</div>

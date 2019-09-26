@@ -33,6 +33,24 @@ $(function () {
                     //         ue.setContent("");
                     //     }
                     // });
+                    layer.confirm('恭喜！帖子发表成功！！！', {
+                          btn: ['回到首页','在发一篇'] //按钮
+                        }, function(){
+                            window.location = '/';
+
+
+                          layer.msg('的确很重要', {icon: 1});
+                        }, function(){
+                          // layer.msg('也可以这样', {
+                          //   time: 20000, //20s后自动关闭
+                          //   btn: ['明白了', '知道了']
+                          // });
+                                titleInput.val("");
+                                ue.setContent("");
+
+                        });
+
+
                     console.log('sucess')
                 }else{
                     // xtalert.alertInfo(data['message']);
