@@ -78,7 +78,7 @@
         <div class="list-group">
           <a href="#" class="list-group-item active">所有板块</a>
           {% for board in boards %}
-              <a href="#" class="list-group-item ">{{ board.name }}</a>
+              <a href="{{ url_for('front.index',bd=board.id) }}" class="list-group-item {% if current_board==board.id %}active{% endif %}">{{ board.name }}</a>
           {% endfor %}
         </div>
 
@@ -88,12 +88,14 @@
 
 
     <div class="post-group">
+
     <ul class="post-group-head">
             <li class="active"><a href="{{ url_for("front.index",st=1,bd=current_board) }}">最新</a></li>
             <li><a href="{{ url_for("front.index",st=2,bd=current_board) }}">精华帖子</a></li>
             <li><a href="{{ url_for("front.index",st=3,bd=current_board) }}">点赞最多</a></li>
             <li><a href="{{ url_for("front.index",st=4,bd=current_board) }}">评论最多</a></li>
     </ul>
+
     <ul class="post-list-group">
         {% for post in posts %}
             <li>
@@ -102,7 +104,7 @@
                 </div>
                 <div class="post-info-group">
                     <p class="post-title">
-                        <a href="#">{{ post.title }}</a>
+                        <a href="{{ url_for('front.post_detail',post_id=post.id) }}">{{ post.title }}</a>
                         {% if post.highlight %}
                             <span class="label label-danger">精华帖</span>
                         {% endif %}
@@ -116,6 +118,8 @@
                 </div>
             </li>
         {% endfor %}
+            <div style="text-align: center"> {{ pagination.links }}</div>
+
     </ul>
 </div>
 

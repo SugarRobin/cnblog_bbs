@@ -25,7 +25,7 @@ class FrontUser(db.Model):
     realname = db.Column(db.String(50))
     avatar = db.Column(db.String(100))
     signature = db.Column(db.String(100))
-    gender = db.Column(db.Enum(GenDerEnum),default=GenDerEnum.UNKNOW)
+    gender = db.Column(db.Enum(GenDerEnum),default='女')
     join_time = db.Column(db.DateTime,default=datetime.now)
 
     #对password对应的是_password，所以要做处理

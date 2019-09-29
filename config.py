@@ -65,3 +65,5 @@ UEDITOR_QINIU_SECRET_KEY = "Par6K8cPirEWGzsDP6dblBRyMkaRaL3TvtXWakXA"
 UEDITOR_QINIU_BUCKET_NAME = "flaskbbs02"
 UEDITOR_QINIU_DOMAIN = "http://pxwttml1j.bkt.clouddn.com"
 
+#帖子分页
+PER_PAGE = 6

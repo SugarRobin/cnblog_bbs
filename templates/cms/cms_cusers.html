@@ -10,4 +10,33 @@
 
 {% block main_content %}
     这是cms用户管理页面
+
+     <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>cms用户id</th>
+                <th>cms用户名称</th>
+                <th>cms用户邮箱</th>
+                <th>加入时间</th>
+                <th>角色</th>
+                <th>角色内容</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cu in cusers %}
+                    <td>{{ cu.id }}</td>
+                    <td>{{ cu.username }}</td>
+                    <td>{{ cu.email }}</td>
+                    <td>{{ cu.join_time }}</td>
+                    <td>{{ cu.roles[0].name }}</td>
+                      <td>{{ cu.roles[0].desc }}</td>
+                    <td>
+                        <button class="btn btn-danger btn-xs">删除cms用户</button>
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
 {% endblock %}

@@ -18,7 +18,8 @@ import string,random
 
 #轮播图
 from .forms import AddBannerForm
-from apps.models import BannerModel
+from apps.models import BannerModel,HighlightPostModel,PostModel,CommentModel
+from apps.front.models import FrontUser
 
 
 #板块
@@ -193,14 +194,18 @@ def email_captcha():
 @login_required
 @permission_required(CMSPersmission.POSTER)
 def posts():
-    return render_template('cms/cms_posts.html')
+    post_list = PostModel.query.all()
+    return render_template('cms/cms_posts.html',posts=post_list)
 
 #评论管理
 @bp.route('/comments/')
 @login_required
 @permission_required(CMSPersmission.COMMENTER)
 def comments():
-    return render_template('cms/cms_comments.html')
+    comments = CommentModel.query.all()
+    # print(comments[0].author.username)
+
+    return render_template('cms/cms_comments.html',comments=comments)
 
 # #板块管理
 # @bp.route('/boards/')
@@ -214,14 +219,17 @@ def comments():
 @login_required
 @permission_required(CMSPersmission.FRONTUSER)
 def fusers():
-    return render_template('cms/cms_fusers.html')
+    fusers = FrontUser.query.all()
+    return render_template('cms/cms_fusers.html',fusers=fusers)
 
 #cms用户管理
 @bp.route('/cusers/')
 @login_required
 @permission_required(CMSPersmission.CMSUSER)
 def cusers():
-    return render_template('cms/cms_cusers.html')
+    cusers = CMSUser.query.all()
+    print(cusers[0].roles[0].name)
+    return render_template('cms/cms_cusers.html',cusers=cusers)
 
 
 #cms用户管理
@@ -261,6 +269,8 @@ def banners():
     return render_template('cms/cms_banners.html',banners=banners)
 
 
+
+#修改轮播图
 @bp.route('/ubanner/',methods=['POST'])
 @login_required
 def ubanner():
@@ -285,6 +295,8 @@ def ubanner():
         return xjson.json_params_error(message=form.get_error())
 
 
+
+#修改板块
 @bp.route('/dbanner/',methods=['POST'])
 @login_required
 def dbanner():
@@ -301,6 +313,9 @@ def dbanner():
     return xjson.json_sucess()
 
 
+
+
+#七牛配置
 import qiniu
 @bp.route('/uptoken/')
 def uptoken():
@@ -311,6 +326,8 @@ def uptoken():
     bucket = 'flaskbbs03'
     token = q.upload_token(bucket)
     return jsonify({'uptoken':token})
+
+
 
 
 #添加板块路由
@@ -351,6 +368,8 @@ def uboard():
         return xjson.json_param_error(message=update_board_form.get_error())
 
 
+
+
 @bp.route('/dboard/', methods=['POST'])
 @login_required
 @permission_required(CMSPersmission.BOARDER)
@@ -375,3 +394,43 @@ def boards():
         'boards':all_boards
     }
     return render_template('cms/cms_boards.html',**context)
+
+
+
+#帖子加精
+@bp.route('/hpost/',methods=['POST'])
+@login_required
+@permission_required(CMSPersmission.POSTER)
+def hpost():
+    post_id = request.form.get("post_id")
+    if not post_id:
+        return xjson.json_params_error('请传入帖子id')
+    post = PostModel.query.get(post_id)
+    if not post:
+        return xjson.json_params_error("没有这篇帖子")
+
+
+    highlight = HighlightPostModel()
+    highlight.post = post
+    db.session.add(highlight)
+    db.session.commit()
+    return xjson.json_sucess()
+
+
+#取消帖子
+@bp.route('/uhpost/',methods=['POST'])
+@login_required
+@permission_required(CMSPersmission.POSTER)
+def uhpost():
+    post_id = request.form.get("post_id")
+    if not post_id:
+        return xjson.json_params_error('请传入帖子id')
+    post = PostModel.query.get(post_id)
+    if not post:
+        return xjson.json_params_error("没有这篇帖子")
+
+    highlight = HighlightPostModel.query.filter_by(post_id=post_id).first()
+    db.session.delete(highlight)
+    db.session.commit()
+    return xjson.json_sucess()
+

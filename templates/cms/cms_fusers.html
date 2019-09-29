@@ -10,4 +10,33 @@
 
 {% block main_content %}
     这是前台用户管理页面
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>用户id</th>
+                <th>用户手机号码</th>
+                <th>用户名称</th>
+                <th>用户邮箱</th>
+                <th>性别</th>
+                <th>加入时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for fu in fusers %}
+                    <td>{{ fu.id }}</td>
+                    <td>{{ fu.telephone }}</td>
+                    <td>{{ fu.username }}</td>
+                    <td>{{ fu.email }}</td>
+                    <td>{{ fu.gender }}</td>
+                      <td>{{ fu.join_time }}</td>
+                    <td>
+                        <button class="btn btn-danger btn-xs">删除用户</button>
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
 {% endblock %}

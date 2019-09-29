@@ -14,6 +14,7 @@ def login_required(func):
     return inner
 
 
+
 def permission_required(permission):
     def outter(func):
         @wraps(func)

@@ -1,15 +1,16 @@
-from flask import Blueprint,views,render_template,request,session,g
+from flask import Blueprint,views,render_template,request,session,g,abort
 from .forms import SignUpForm
 from .models import FrontUser
-from apps.models import BannerModel,BoardModel,PostModel
+from apps.models import BannerModel,BoardModel,PostModel,CommentModel
 from exts import db
 from utils import xjson
 from utils import safeutils
 import config
-from .forms import SignInForm,AddPostForm
+from .forms import SignInForm,AddPostForm,AddCommentForm
 # from .hooks import my_before_request
 # import apps.front
 from .decorators import login_required
+from flask_paginate import Pagination,get_page_parameter
 
 
 bp = Blueprint('front',__name__)  #因为是前台直接访问不用加url_prefix
@@ -19,9 +20,47 @@ def index():
     banners = BannerModel.query.order_by(BannerModel.priority.desc()).all()
     boards = BoardModel.query.all()
 
+    # get_page_parameter可以获取到当前页
+
+    #当前页面
+    page = request.args.get(get_page_parameter(),type=int,default=1)
+    #开始位置
+    start = (page - 1) * config.PER_PAGE
+
+    #结束位置
+    end = start + config.PER_PAGE
+
+    # posts = PostModel.query.slice(start, end)
+    # print(posts)
+    board_id = request.args.get('bd', type=int, default=None)
+    if board_id:
+        query_obj = PostModel.query.filter_by(board_id=board_id)
+
+        posts = query_obj.slice(start, end)
+
+        total = query_obj.count()
+
+
+    else:
+        posts = PostModel.query.slice(start,end)
+        total = PostModel.query.count()
+
+
+
+
+
+    pagination = Pagination(bs_version=3,page=page,total=total)
+
+
+
+
+
     context = {
         'banners':banners,
-        'boards':boards
+        'boards':boards,
+        'posts':posts,
+        'pagination':pagination,
+        'current_board':board_id   #返回板块id用于设置选中板块的状态样式
     }
 
     return render_template('front/front_index.html',**context)
@@ -104,6 +143,42 @@ def apost():
             return xjson.json_sucess()
         else:
             return xjson.json_params_error(message=add_post_form.get_error())
+
+
+@bp.route('/p/<post_id>/')
+def post_detail(post_id):
+    post = PostModel.query.get(post_id)
+    if not post:
+        abort(404)
+    return render_template('front/front_pdetail.html',post=post)
+
+
+
+@bp.route('/acomment/',methods=['POST'])
+@login_required
+def add_comment():
+    add_comment_form = AddCommentForm(request.form)
+    if add_comment_form.validate():
+        content = add_comment_form.content.data
+        post_id = add_comment_form.post_id.data
+        post_id = add_comment_form.post_id.data
+        post = PostModel.query.get(post_id)
+        if post:
+            comment = CommentModel(content=content)
+            comment.post = post
+            comment.author = g.front_user
+            db.session.add(comment)
+            db.session.commit()
+            return  xjson.json_sucess()
+        else:
+            return  xjson.json_params_error('没有这篇帖子')
+    else:
+        return xjson.json_params_error(add_comment_form.get_error())
+
+
+
+
+
 
 
 
